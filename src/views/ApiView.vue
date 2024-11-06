@@ -67,14 +67,14 @@ export default {
       this.tabName = tab;
     },
     async fetchArticlesByCategory(category) {
-      const res = await axios.get(`/v1/articles/${category}?page_size	
+      const res = await axios.get(`https://api-v2.deepsearch.com/v1/articles/${category}?page_size	
 =30`, {
         params: {
           api_key: process.env.VUE_APP_API_KEY
         }
       })
       this.articles = res.data.data;
-      const global_res = await axios.get(`/v1/global-articles/${category}?page_size=30`, {
+      const global_res = await axios.get(`https://api-v2.deepsearch.com/v1/global-articles/${category}?page_size=30`, {
         params: {
           api_key: process.env.VUE_APP_API_KEY
         }
@@ -82,13 +82,13 @@ export default {
       this.global_articles = global_res.data.data;
     },
     async fetchSearchResults(query) {
-      const res = await axios.get(`/v1/articles?keyword=${query}&page_size=30`, {
+      const res = await axios.get(`https://api-v2.deepsearch.com/v1/articles?keyword=${query}&page_size=30`, {
         params: {
           api_key: process.env.VUE_APP_API_KEY
         }
       })
       this.articles = res.data.data;
-      const global_res = await axios.get(`/v1/articles?keyword=${query}&page_size=30`, {
+      const global_res = await axios.get(`https://api-v2.deepsearch.com/v1/articles?keyword=${query}&page_size=30`, {
         params: {
           api_key: process.env.VUE_APP_API_KEY
         }
