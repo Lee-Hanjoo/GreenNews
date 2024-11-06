@@ -3,13 +3,19 @@
     <nav class="nav">
       <router-link to="/">뉴스모아</router-link>
       <div :class="{active:searchActive}">
-        <input v-if="searchActive" type="text" class="search-input" placeholder="검색어를 입력해주세요."/>
-        <button @click.stop="searchActive = !searchActive">
+        <input 
+          v-if="searchActive" 
+          v-model="searchQuery" 
+          type="text" 
+          class="search-input" 
+          placeholder="검색어를 입력해주세요."
+        />
+        <button @click.stop="toggleSearch">
           <img src="../src/assets/icon/icon_search.png" class="search-img">
         </button>
       </div>
     </nav>
-    <router-view/>
+    <router-view :searchQuery="searchQuery" />
   </div>
 </template>
 
@@ -18,7 +24,16 @@ export default {
   data(){
     return {
       searchActive: false,
+      searchQuery: "",
     }
+  },
+    methods: {
+    toggleSearch() {
+      if (this.searchQuery) {
+        this.$router.push({ path: "/", query: { search: this.searchQuery } });
+      }
+      this.searchActive = !this.searchActive;
+    },
   },
 }
 </script>

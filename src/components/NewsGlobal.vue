@@ -69,7 +69,6 @@ export default {
   },
   props: {
     data: Array,
-    title: String
   },
   components: {
     Swiper,

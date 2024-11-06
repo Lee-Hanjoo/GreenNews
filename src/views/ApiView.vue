@@ -53,7 +53,14 @@ export default {
     tabName() {
       this.category = 'politics';
       this.fetchArticlesByCategory(this.category)
-    }
+    },
+    '$route.query.search'(newQuery) {
+      if (newQuery) {
+        this.fetchSearchResults(newQuery);
+      } else {
+        this.fetchSearchResults('');
+      }
+    },
   },
   methods: {
     changeTab(tab) {
@@ -74,11 +81,29 @@ export default {
       })
       this.global_articles = global_res.data.data;
     },
+    async fetchSearchResults(query) {
+      const res = await axios.get(`/v1/articles?keyword=${query}&page_size=30`, {
+        params: {
+          api_key: process.env.VUE_APP_API_KEY
+        }
+      })
+      this.articles = res.data.data;
+      const global_res = await axios.get(`/v1/articles?keyword=${query}&page_size=30`, {
+        params: {
+          api_key: process.env.VUE_APP_API_KEY
+        }
+      })
+      this.global_articles = global_res.data.data;
+    },
   },
   components:{
     NewsKorea, NewsGlobal
   },
-  
+  computed: {
+    searchQuery() {
+      return this.$route.query.search || "";
+    },
+  }
 }
 </script>
 <style lang="scss">
