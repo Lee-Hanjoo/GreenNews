@@ -164,6 +164,7 @@ export default {
           border-bottom: 0;
           flex: 1;
           text-align: center;
+          cursor: pointer;
           &:not(:first-of-type) {
             margin-left: -1px;
           }
