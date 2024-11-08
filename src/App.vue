@@ -9,9 +9,7 @@
           class="search-input" 
           placeholder="검색어를 입력해주세요."
         />
-        <button>
-          <img src="../src/assets/icon/icon_search.png" class="search-img">
-        </button>
+        <img src="../src/assets/icon/icon_search.png" class="search-img" alt="search">
       </div>
     </nav>
     <router-view :keyword="keyword" @clear-keyword="clearKeyword" />
@@ -93,13 +91,11 @@ html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6,
         border: 1px solid #afafaf;
         border-radius: 999px;
       }
-      button {
+      .search-img {
         position: absolute;
         right: 52px;
         top: 50%;
         transform: translateY(-50%);
-      }
-      .search-img {
         width: 24px;
         height: 24px;
       }
