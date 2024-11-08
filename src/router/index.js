@@ -5,7 +5,7 @@ const routes = [
   {
     path: '/',
     name: 'api',
-    component: () => ApiView
+    component: ApiView
   }
 ]
 
