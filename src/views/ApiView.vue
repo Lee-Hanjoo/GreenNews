@@ -2,33 +2,31 @@
   <div class="container">
     <nav class="tab">
       <button
-        @click="changeTab('korea')"
-        :class="{active:tabName=='korea'}"
+        @click="changeTab('articles')"
+        :class="{active:tabName=='articles'}"
       >
         국내
       </button>
        <button
-        @click="changeTab('global')"
-        :class="{active:tabName=='global'}"
+        @click="changeTab('global-articles')"
+        :class="{active:tabName=='global-articles'}"
       >
         해외
       </button>
     </nav>
     <div class="news-content">
-      <div v-if="tabName=='korea'">
-        <NewsKorea 
-          :data="articles" 
-          :category="category"
-          @category-changed="fetchArticlesByCategory" 
-        />
-      </div>
-      <div v-else-if="tabName=='global'">
-        <NewsGlobal 
-          :data="global_articles" 
-          :category="category"
-          @category-changed="fetchArticlesByCategory" 
-        />
-      </div>
+      <NewsKorea 
+        v-if="tabName=='articles'"
+        :data="articles" 
+        :category="category"
+        @category-changed="handleCategoryChange" 
+      />
+      <NewsGlobal 
+        v-else-if="tabName=='global-articles'"
+        :data="articles" 
+        :category="category"
+        @category-changed="handleCategoryChange" 
+      />
     </div>
   </div>
 </template>
@@ -38,11 +36,13 @@ import NewsGlobal from "@/components/NewsGlobal";
 import axios from 'axios';
 
 export default {
+  props: {
+    keyword: String
+  },
   data(){
     return {
-      tabName: 'korea',
+      tabName: 'articles',
       articles: [], // 기사 데이터 저장하는 변수
-      global_articles: [],
       category: 'politics'
     }
   },
@@ -52,13 +52,13 @@ export default {
   watch: {
     tabName() {
       this.category = 'politics';
-      this.fetchArticlesByCategory(this.category)
+      this.fetchArticlesByCategory(this.category);
     },
-    '$route.query.search'(newQuery) {
-      if (newQuery) {
-        this.fetchSearchResults(newQuery);
+    keyword(newKeyword) {
+      if (newKeyword) {
+        this.searchArticles(newKeyword);
       } else {
-        this.fetchSearchResults('');
+        this.fetchArticlesByCategory();
       }
     },
   },
@@ -66,43 +66,25 @@ export default {
     changeTab(tab) {
       this.tabName = tab;
     },
-    async fetchArticlesByCategory(category) {
-      const res = await axios.get(`/v1/articles/${category}?page_size	
-=30`, {
-        params: {
-          api_key: process.env.VUE_APP_API_KEY
-        }
-      })
-      this.articles = res.data.data;
-      const global_res = await axios.get(`/v1/global-articles/${category}?page_size=30`, {
-        params: {
-          api_key: process.env.VUE_APP_API_KEY
-        }
-      })
-      this.global_articles = global_res.data.data;
+    handleCategoryChange(category) {
+      this.$emit('clear-keyword');
+      this.fetchArticlesByCategory(category);
     },
-    async fetchSearchResults(query) {
-      const res = await axios.get(`/v1/articles?keyword=${query}&page_size=30`, {
-        params: {
-          api_key: process.env.VUE_APP_API_KEY
-        }
-      })
+    async fetchArticlesByCategory(category = this.category) {
+      const res = await axios.get(`https://green-todo-server.vercel.app/news?articles=${this.tabName}&section=${category}`)
       this.articles = res.data.data;
-      const global_res = await axios.get(`/v1/articles?keyword=${query}&page_size=30`, {
-        params: {
-          api_key: process.env.VUE_APP_API_KEY
-        }
-      })
-      this.global_articles = global_res.data.data;
+    },
+    async searchArticles(keyword) {
+      try {
+        const res = await axios.get(`https://green-todo-server.vercel.app/news/search?articles=${this.tabName}&keyword=${keyword}`);
+        this.articles = res.data.data;
+      } catch (error) {
+        console.error('검색 오류:', error);
+      }
     },
   },
   components:{
     NewsKorea, NewsGlobal
-  },
-  computed: {
-    searchQuery() {
-      return this.$route.query.search || "";
-    },
   }
 }
 </script>

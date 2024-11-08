@@ -2,40 +2,40 @@
   <div id="root">
     <nav class="nav">
       <router-link to="/">뉴스모아</router-link>
-      <div :class="{active:searchActive}">
-        <input 
-          v-if="searchActive" 
-          v-model="searchQuery" 
+      <div>
+        <input
+          v-model="keyword" 
           type="text" 
           class="search-input" 
           placeholder="검색어를 입력해주세요."
         />
-        <button @click.stop="toggleSearch">
+        <button>
           <img src="../src/assets/icon/icon_search.png" class="search-img">
         </button>
       </div>
     </nav>
-    <router-view :searchQuery="searchQuery" />
+    <router-view :keyword="keyword" @clear-keyword="clearKeyword" />
   </div>
 </template>
 
 <script>
 export default {
-  data(){
-    return {
-      searchActive: false,
-      searchQuery: "",
-    }
-  },
-    methods: {
-    toggleSearch() {
-      if (this.searchQuery) {
-        this.$router.push({ path: "/", query: { search: this.searchQuery } });
-      }
-      this.searchActive = !this.searchActive;
+    name: 'SearchList',
+    data() {
+        return {
+            keyword: '',
+        };
     },
-  },
-}
+    methods: {
+      searchArticles() {
+        // 검색어가 입력되면 검색을 실행
+        this.$router.push({ path: '/', query: { search: this.keyword } });
+      },
+      clearKeyword() {
+        this.keyword = '';
+      },
+    },
+};
 </script>
 
 <style lang="scss">
