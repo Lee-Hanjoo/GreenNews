@@ -71,11 +71,25 @@ export default {
       this.fetchArticlesByCategory(category);
     },
     async fetchArticlesByCategory(category = this.category) {
-      const res = await axios.get(`https://green-todo-server.vercel.app/news?articles=${this.tabName}&section=${category}`)
-      this.articles = res.data.data;
+      try {
+        if (!this.tabName || !category) {
+          console.error('유효하지 않은 탭 또는 카테고리입니다.');
+          return;
+        }
+
+        const res = await axios.get(`https://green-todo-server.vercel.app/news?articles=${this.tabName}&section=${category}`);
+        this.articles = res.data.data;
+      } catch (error) {
+        console.error('기사 불러오기 오류:', error);
+      }
     },
     async searchArticles(keyword) {
       try {
+        if (!this.tabName || !keyword) {
+          console.error('유효하지 않은 탭 또는 검색어입니다.');
+          return;
+        }
+
         const res = await axios.get(`https://green-todo-server.vercel.app/news/search?articles=${this.tabName}&keyword=${keyword}`);
         this.articles = res.data.data;
       } catch (error) {
