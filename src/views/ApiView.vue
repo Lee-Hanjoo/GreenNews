@@ -47,6 +47,7 @@ export default {
     }
   },
   created() {
+    this.category = 'politics';
     this.fetchArticlesByCategory(this.category);
   },
   watch: {
