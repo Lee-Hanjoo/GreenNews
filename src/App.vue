@@ -12,7 +12,7 @@
         <img src="../src/assets/icon/icon_search.png" class="search-img" alt="search">
       </div>
     </nav>
-    <router-view :keyword="keyword" @clear-keyword="clearKeyword" />
+    <router-view :keyword="keyword" @clear-keyword="clearKeyword" :tabName="tabName" :category="category" />
   </div>
 </template>
 
@@ -21,6 +21,8 @@ export default {
     data() {
         return {
             keyword: '',
+            tabName: 'articles',
+            category: 'politics'
         };
     },
     methods: {
