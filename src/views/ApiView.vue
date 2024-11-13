@@ -49,7 +49,7 @@ export default {
       tabName: 'articles',
       articles: [], // 기사 데이터 저장하는 변수
       category: 'politics',
-      isLoading: true
+      isLoading: true,
     }
   },
   created() {
