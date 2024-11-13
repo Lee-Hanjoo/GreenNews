@@ -14,19 +14,24 @@
         해외
       </button>
     </nav>
-    <div class="news-content">
-      <NewsKorea 
-        v-if="tabName=='articles'"
-        :data="articles" 
-        :category="category"
-        @category-changed="handleCategoryChange" 
-      />
-      <NewsGlobal 
-        v-else-if="tabName=='global-articles'"
-        :data="articles" 
-        :category="category"
-        @category-changed="handleCategoryChange" 
-      />
+    <div>
+      <div v-if="isLoading" class="loading-wrap">
+        <img src="../assets/loading.gif" alt="loading" />
+      </div>
+      <div v-else-if="!isLoading" class="news-content">
+        <NewsKorea 
+          v-if="tabName=='articles'"
+          :data="articles" 
+          :category="category"
+          @category-changed="handleCategoryChange" 
+        />
+        <NewsGlobal 
+          v-else-if="tabName=='global-articles'"
+          :data="articles" 
+          :category="category"
+          @category-changed="handleCategoryChange" 
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -43,7 +48,8 @@ export default {
     return {
       tabName: 'articles',
       articles: [], // 기사 데이터 저장하는 변수
-      category: 'politics'
+      category: 'politics',
+      isLoading: true
     }
   },
   created() {
@@ -80,6 +86,7 @@ export default {
 
         const res = await axios.get(`https://green-todo-server.vercel.app/news?articles=${this.tabName}&section=${category}`);
         this.articles = res.data.data;
+        this.isLoading = false;
       } catch (error) {
         console.error('기사 불러오기 오류:', error);
       }
@@ -93,6 +100,7 @@ export default {
 
         const res = await axios.get(`https://green-todo-server.vercel.app/news/search?articles=${this.tabName}&keyword=${keyword}`);
         this.articles = res.data.data;
+        this.isLoading = false;
       } catch (error) {
         console.error('검색 오류:', error);
       }
@@ -124,6 +132,16 @@ export default {
         background-color: #2f2f2f;
         color: #fff;
       }
+    }
+  }
+  .loading-wrap {
+    padding-top: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    img {
+      width: 200px;
+      height: 200px;
     }
   }
 </style>
