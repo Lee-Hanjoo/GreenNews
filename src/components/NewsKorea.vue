@@ -2,13 +2,13 @@
   <div>
     <div class="top">
       <swiper
-    :modules="modules"
+        :modules="modules"
         :slides-per-view="1"
         :space-between="20"
         @swiper="onSwiper"
         @slideChange="onSlideChange"
-    navigation
-    :pagination="{ clickable: true }"
+        navigation
+        :pagination="{ clickable: true }"
       >
         <swiper-slide v-for="article in data.slice(0, 10)" :key="article.id" @click="openNewWindow(article.content_url)">
           <img v-if="article.image_url" :src="article.image_url" class="top-img"/>

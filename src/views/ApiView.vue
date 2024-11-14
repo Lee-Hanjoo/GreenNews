@@ -22,13 +22,11 @@
         <NewsKorea 
           v-if="tabName=='articles'"
           :data="articles" 
-          :category="category"
           @category-changed="handleCategoryChange" 
         />
         <NewsGlobal 
           v-else-if="tabName=='global-articles'"
           :data="articles" 
-          :category="category"
           @category-changed="handleCategoryChange" 
         />
       </div>
@@ -71,6 +69,7 @@ export default {
   },
   methods: {
     changeTab(tab) {
+      this.isLoading = true;
       this.tabName = tab;
     },
     handleCategoryChange(category) {
@@ -79,30 +78,23 @@ export default {
     },
     async fetchArticlesByCategory(category = this.category) {
       try {
-        if (!this.tabName || !category) {
-          console.error('유효하지 않은 탭 또는 카테고리입니다.');
-          return;
-        }
-
         const res = await axios.get(`https://green-todo-server.vercel.app/news?articles=${this.tabName}&section=${category}`);
         this.articles = res.data.data;
-        this.isLoading = false;
       } catch (error) {
         console.error('기사 불러오기 오류:', error);
+      } finally {
+        this.isLoading = false
       }
     },
     async searchArticles(keyword) {
       try {
-        if (!this.tabName || !keyword) {
-          console.error('유효하지 않은 탭 또는 검색어입니다.');
-          return;
-        }
-
         const res = await axios.get(`https://green-todo-server.vercel.app/news/search?articles=${this.tabName}&keyword=${keyword}`);
         this.articles = res.data.data;
         this.isLoading = false;
       } catch (error) {
         console.error('검색 오류:', error);
+      } finally {
+        this.isLoading = false
       }
     },
   },
